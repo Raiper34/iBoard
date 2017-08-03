@@ -2,34 +2,65 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>{{title}}</title>
-  <script src="/fabric/fabric.js" type="text/javascript"></script>
-  <script src="/socket.io/socket.io.js"></script>
+  <title>iBoard</title>
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/libs/materialize-css/dist/css/materialize.min.css">
 </head>
 <body>
-<canvas id="board" width="500" height="500"></canvas>
-<script type="text/javascript">
-  var socket = io();
-  socket.on('canvas', function(canvasContent){
-    //canvas.loadFromJSON(canvasContent);
-    canvas.add(JSON.stringify(canvasContent));
-    console.log('OK');
-  });
-  var canvas = new fabric.Canvas('board');
-  canvas.isDrawingMode = true;
-  sendCanvas(canvas);
+<!-- Navbar -->
+<nav>
+  <div class="nav-wrapper deep-orange">
+    <ul class="left">
+      <li data-activates="slide-out" class="button-collapse"><a href="#"><i class="material-icons">menu</i></a></li>
+    </ul>
+    <a href="#!" class="brand-logo center">iBoard</a>
+  </div>
+</nav>
 
-  function sendCanvas()
-  {
-    setTimeout(function(){
-      if(canvas._objects.length > 0) {
-        console.log(canvas._objects[canvas._objects.length - 1]);
-        socket.emit('canvas', JSON.stringify(canvas._objects[canvas._objects.length - 1]));
-      }
-      sendCanvas();
-    }, 500);
-  }
-</script>
+<!-- Side nav -->
+<ul id="slide-out" class="side-nav">
+  <li>
+    <div class="user-view deep-orange">
+      <h3 class="white-text">Tools</h3>
+    </div>
+  </li>
+  <li><a class="subheader">Tool</a></li>
+  <li><a class="waves-effect" href="#!">Stencil</a></li>
+  <li><a class="waves-effect" href="#!">Eraser</a></li>
+  <li><a class="subheader">Settings</a></li>
+  <li>
+    <p class="range-field">
+      <input id="pencil-size" type="range" id="test5" min="0" max="100"/>
+    </p>
+  </li>
+  <li>
+    <input id="pencil-color" type="color">
+  </li>
+  <li>
+    <div class="input-field col s12">
+      <select>
+        <option value="" disabled selected>Choose your option</option>
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+      </select>
+      <label>Materialize Select</label>
+    </div>
+  </li>
+</ul>
+
+<!-- Canvas -->
+<canvas id="board" width="800" height="480"></canvas>
+
+<!-- Libs scripts -->
+<script src="/libs/fabric/dist/fabric.js" type="text/javascript"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/libs/jquery/dist/jquery.js" type="text/javascript"></script>
+<script src="/libs/materialize-css/dist/js/materialize.min.js" type="text/javascript"></script>
+
+<!-- My scripts -->
+<script src="index.js" type="text/javascript"></script>
 </body>
 </html>
 
