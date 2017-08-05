@@ -1,16 +1,17 @@
 {
-  "name": "backend",
+  "name": "iBoard",
   "version": "1.0.0",
-  "description": "",
+  "description": "MUL iBoard Projects 2018",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Filip Gulan",
   "license": "ISC",
   "dependencies": {
     "express": "^4.15.3",
     "fabric": "^1.7.13",
+    "jscolor-picker": "^2.0.4",
     "materialize-css": "^0.100.1",
     "mustache-express": "^1.2.4",
     "node-json-db": "^0.7.3",

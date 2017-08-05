@@ -1,3 +1,10 @@
+/*
+ * Index js
+ * Main frontend js file - canvas manipulationg, socket communication, ui manipulating
+ * @Author: Filip Gulan
+ * @Date: 2018
+ */
+
 /***** fabric canvas *****/
 var canvas = new fabric.Canvas('board');
 canvas.isDrawingMode = true;
@@ -10,19 +17,20 @@ canvas.setHeight(canvas.height * widthRatio);
 /***** Socket io communication *****/
 var socket = io();
 
-//Message arrived
-socket.on('canvas', function(object) {
-  object = object.map(function(item) {
+//Message arrived - objects
+socket.on('objects', function (object) {
+  //Make objects from strings
+  object = object.map(function (item) {
     return JSON.parse(item);
   });
-  fabric.util.enlivenObjects(object, function(objects) {
+  //Add arrived objects to canvas
+  fabric.util.enlivenObjects(object, function (objects) {
     var origRenderOnAddRemove = canvas.renderOnAddRemove;
     canvas.renderOnAddRemove = false;
 
-    objects.forEach(function(o) {
+    objects.forEach(function (o) {
       if (!canvas.contains(o)) {
         canvas.add(o);
-        console.log('ARRIVED');
       }
     });
 
@@ -31,24 +39,37 @@ socket.on('canvas', function(object) {
   });
 });
 
-canvas.on('mouse:up', function(event) {
-  console.log('ADDED');
-  socket.emit('canvas', JSON.stringify(event.target));
+socket.on('erase', function () {
+  canvas.clear();
+});
+
+//On draw new object
+canvas.on('mouse:up', function (event) {
+  socket.emit('objects', JSON.stringify(event.target));
 });
 
 /***** Materialize UI *****/
-$(document).ready(function() {
-  $('select').material_select();
-  $(".button-collapse").sideNav();
+$('#eraseCanvasButton').click(function() {
+  socket.emit('erase');
 });
 
-$("#pencil-size").change(function(event) {
+$(document).ready(function () {
+  $(".button-collapse").sideNav();
+  $('.modal').modal();
+});
+
+$("#pencil-size").change(function (event) {
   canvas.freeDrawingBrush.width = event.target.value;
 });
 
-$("#pencil-color").change(function(event) {
-  canvas.freeDrawingBrush.color = event.target.value;
+$('#saveButton').click(function () {
+  var canvas = document.getElementById("board");
+  this.href = canvas.toDataURL('image/png');
 });
+
+function onChangeColor(value) {
+  canvas.freeDrawingBrush.color = '#' + value;
+};
 
 /***** Other function ******/
 responsive();
@@ -58,7 +79,7 @@ function responsive() {
   var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
   var height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
   canvas.setDimensions({
-    width: width - 0,
+    width: width,
     height: height - 65
   });
 }
